@@ -45,13 +45,14 @@ class UserController {
     const { username, password } = req.body;
     try {
       const user = await User.findOne({ username }, { __v: false }).exec();
-      if (!user) throw new Error('User not found');
+      if (!user) return res.status(404).send({ error: true, message: 'User not found.' });
       const match = await user.comparePassword(password);
       if (!match) {
-        throw new Error('Incorrect password.');
+        return res.status(401).send({ error: true, message: 'Incorrect password.' });
       }
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: 86400 });
-      return res.status(200).json(token);
+      const data = { token, user: { id: user._id, username } };
+      return res.status(200).json(data);
     } catch (error) {
       return res.status(500).send(error);
     }

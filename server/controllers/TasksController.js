@@ -45,7 +45,7 @@ class TasksController {
     const _id = req.params.id;
     const { finished } = req.body;
     try {
-      const result = await Task.findOneAndUpdate({ _id, finished: false }, { finished });
+      const result = await Task.findOneAndUpdate({ _id, finished: false }, { finished }).exec();
       return res.status(200).json(result);
     } catch (error) {
       return res.status(500).send(error);

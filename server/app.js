@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import logger from 'morgan';
+import cors from 'cors';
 import Database from './database/db';
 
 import router from './routes';
@@ -15,6 +16,8 @@ class App {
   }
 
   config = () => {
+    this.app.use(cors());
+    this.app.options('*', cors());
     this.app.use(logger('dev'));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
